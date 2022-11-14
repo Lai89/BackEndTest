@@ -1,0 +1,370 @@
+{
+	"info": {
+		"_postman_id": "7f23b097-dfb9-472a-bf61-7cc41b5e8350",
+		"name": "BackEndTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9972778"
+	},
+	"item": [
+		{
+			"name": "PetStoreTest",
+			"item": [
+				{
+					"name": "1.1 GetAvailablePets",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"//Tests\r",
+									"//Check status code is OK\r",
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//Check if the response is an array\r",
+									"pm.test(\"The object is an array\", function () {\r",
+									"    pm.expect(Array.isArray(jsonData)).to.be.true;\r",
+									"    pm.expect(jsonData.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"//Check the properties of the object\r",
+									"pm.test(\"Body contains properties\", function () {\r",
+									"    var firstItem = jsonData[0];\r",
+									"    \r",
+									"    pm.expect(firstItem.hasOwnProperty(\"id\")).to.be.true;\r",
+									"    pm.expect(firstItem.hasOwnProperty(\"category\")).to.be.true;\r",
+									"    pm.expect(firstItem.hasOwnProperty(\"name\")).to.be.true;\r",
+									"    pm.expect(firstItem.hasOwnProperty(\"photoUrls\")).to.be.true;\r",
+									"    pm.expect(firstItem.hasOwnProperty(\"tags\")).to.be.true;\r",
+									"    pm.expect(firstItem.hasOwnProperty(\"status\")).to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}v2/pet/findByStatus?status=available",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet",
+								"findByStatus"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "available"
+								}
+							]
+						},
+						"description": "Scenario: Obtain all available pets\r\n\r\n<p>GIVEN I have a list with all the pets and their status (available, pending or sold)</p>\r\n<p>WHEN I select status as available</p>\r\n<p>THEN I will obtain the list with all the pets available at the moment</p>"
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 PostNewPet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"\r",
+									"//Set environment variables for following requests\r",
+									"console.log(jsonData.id);\r",
+									"pm.environment.set(\"petId\", jsonData.id);\r",
+									"pm.environment.set(\"categoryId\", jsonData.category.id);\r",
+									"pm.environment.set(\"categoryName\", jsonData.category.name);\r",
+									"pm.environment.set(\"petName\", jsonData.name);\r",
+									"pm.environment.set(\"petStatus\", jsonData.status)\r",
+									"\r",
+									"//Tests\r",
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains Id\", function () {\r",
+									"    pm.expect(jsonData.id).not.eql(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 25,\r\n  \"category\": {\r\n    \"id\": 1,\r\n    \"name\":\"Cat\"\r\n  },\r\n  \"name\": \"Rome\",\r\n  \"photoUrls\": [\r\n    \"https://tse4.mm.bing.net/th?id=OIP.BR2BDP4ZtodY4GI7wEOiVwHaHv&pid=Api\",\r\n    \"http://www.mundogatos.com/Uploads/mundogatos.com/ImagenesGrandes/fotos-de-gatitos-7.jpg\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"kitten\"\r\n    },\r\n    {\r\n      \"id\": 0,\r\n      \"name\": \"cute\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v2/pet",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet"
+							]
+						},
+						"description": "StartFragment\n\nScenario: Post a new pet\n\nGIVEN I have the description of a new pet available in the store)\n\nWHEN I post the new pet\n\nTHEN I will obtain the object of the new pet"
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 GetNewPet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var petId = pm.environment.get(\"petId\");\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains id\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(petId);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains Category\", function () {\r",
+									"    pm.expect(jsonData.category.name).to.eql(\"Cat\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains Pet Name\", function () {\r",
+									"    pm.expect(jsonData.name).to.eql(\"Rome\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"There are two photo URL\", function () {\r",
+									"    pm.expect(jsonData.photoUrls.length).to.eql(2);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"There are two tags\", function () {\r",
+									"    pm.expect(jsonData.tags.length).to.eql(2);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is available\", function () {\r",
+									"    pm.expect(jsonData.status).to.eql(\"available\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v2/pet/{{petId}}",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 UpdatePet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var petId = pm.environment.get(\"petId\");\r",
+									"\r",
+									"//Tests\r",
+									"pm.test(\"Status code is OK\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body contains Id\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(petId);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is sold\", function () {\r",
+									"    pm.expect(jsonData.status).to.eql(\"sold\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": {{petId}},\r\n    \"status\": \"sold\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}v2/pet",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet"
+							]
+						},
+						"description": "StartFragment\n\nScenario: Update a pet status to sol\n\nGIVEN a pet that is not available anymore\n\nWHEN I select status as sold\n\nTHEN I will obtain the object of the pet with status sold"
+					},
+					"response": []
+				},
+				{
+					"name": "1.5 DeletePet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"var petId = pm.environment.get(\"petId\");\r",
+									"\r",
+									"//Tests\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status is sold\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(String(petId));\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"notFoundPetId\", jsonData.message);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api_key",
+								"value": "OAgHj1wNNPRoPDFw9r3bUY4qhTyeCDMO7GzDn8Ak5lgAcy63qEQScTx6brNAgplEJNhUMsjDMbJKWyUdPqphJV2tEEO619KLtBLeK0rKKsjwjG6UPUvC0DhINrYw8QVP",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}v2/pet/{{petId}}",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							]
+						},
+						"description": "StartFragment\n\nScenario: Obtain all available pets\n\nGIVEN I want a pet to not be in the inventory anymore\n\nWHEN I delete the registry\n\nTHEN the pet will disappear from the inventory of the pet store.\n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "1.6 DeletePet_NotFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"//Tests\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api_key",
+								"value": "OAgHj1wNNPRoPDFw9r3bUY4qhTyeCDMO7GzDn8Ak5lgAcy63qEQScTx6brNAgplEJNhUMsjDMbJKWyUdPqphJV2tEEO619KLtBLeK0rKKsjwjG6UPUvC0DhINrYw8QVP",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}v2/pet/{{petId}}",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							]
+						},
+						"description": "StartFragment\n\nScenario: Obtain all available pets\n\nGIVEN I want a pet to not be in the inventory anymore\n\nWHEN I delete the registry\n\nTHEN the pet will disappear from the inventory of the pet store.\n\nEndFragment"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
