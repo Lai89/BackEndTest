@@ -40,3 +40,4 @@ In order to be able to execute the tests in Postman or Newman, do the following 
 - As the collection grows and we use the same variables or methods for multiple requests, we can store these elements in the test scenario folder so we avoid unnecessary repetition.
 - We could also create an external JSON file in order to use different data sets for the tests.
 - We could move the tests to Rest Assured, as it is a more complete framework for coding.
+- We can add conditions to test to log messages in console in order to made the tests more traceables.
