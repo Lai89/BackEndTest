@@ -16,6 +16,17 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/*\r",
+									"Scenario: Obtain all available pets\r",
+									"\r",
+									"GIVEN I have a list with all the pets and their status (available, pending or sold)\r",
+									"\r",
+									"WHEN I select status as available\r",
+									"\r",
+									"THEN I will obtain the list with all the pets available at the moment\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
 									"var jsonData = pm.response.json();\r",
 									"\r",
 									"//Tests\r",
@@ -84,23 +95,31 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/*\r",
+									"Scenario: Post a new pet\r",
+									"\r",
+									"GIVEN I have the description of a new pet available in the store)\r",
+									"\r",
+									"WHEN I post the new pet\r",
+									"\r",
+									"THEN I will obtain the object of the new pet\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
 									"var jsonData = pm.response.json();\r",
 									"\r",
-									"\r",
 									"//Set environment variables for following requests\r",
-									"console.log(jsonData.id);\r",
 									"pm.environment.set(\"petId\", jsonData.id);\r",
-									"pm.environment.set(\"categoryId\", jsonData.category.id);\r",
-									"pm.environment.set(\"categoryName\", jsonData.category.name);\r",
-									"pm.environment.set(\"petName\", jsonData.name);\r",
 									"pm.environment.set(\"petStatus\", jsonData.status)\r",
 									"\r",
 									"//Tests\r",
+									"//Check status code is OK\r",
 									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body contains Id\", function () {\r",
+									"//Check id is not null\r",
+									"pm.test(\"Id is not null\", function () {\r",
 									"    pm.expect(jsonData.id).not.eql(0);\r",
 									"});\r",
 									"\r",
@@ -132,44 +151,63 @@
 								"pet"
 							]
 						},
-						"description": "StartFragment\n\nScenario: Post a new pet\n\nGIVEN I have the description of a new pet available in the store)\n\nWHEN I post the new pet\n\nTHEN I will obtain the object of the new pet"
+						"description": "Scenario: Post a new pet\n\nGIVEN I have the description of a new pet available in the store)\n\nWHEN I post the new pet\n\nTHEN I will obtain the object of the new pet"
 					},
 					"response": []
 				},
 				{
-					"name": "1.3 GetNewPet",
+					"name": "1.3 GetNewPetById",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/*\r",
+									"Scenario: Get new pet by id\r",
+									"\r",
+									"GIVEN a new pet posted on the shop\r",
+									"\r",
+									"WHEN I find the new pet by Id\r",
+									"\r",
+									"THEN I will obtain all the information of the new pet\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
 									"var jsonData = pm.response.json();\r",
 									"var petId = pm.environment.get(\"petId\");\r",
 									"\r",
+									"//Tests\r",
+									"//Check status is OK\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body contains id\", function () {\r",
+									"//Check body id equals new pet id\r",
+									"pm.test(\"Body contains expected id\", function () {\r",
 									"    pm.expect(jsonData.id).to.eql(petId);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body contains Category\", function () {\r",
+									"//Check new pet category\r",
+									"pm.test(\"Body contains expected Category\", function () {\r",
 									"    pm.expect(jsonData.category.name).to.eql(\"Cat\");\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body contains Pet Name\", function () {\r",
+									"//Check new pet name\r",
+									"pm.test(\"Body contains expected Pet Name\", function () {\r",
 									"    pm.expect(jsonData.name).to.eql(\"Rome\");\r",
 									"});\r",
 									"\r",
+									"//Check how many photo URL has new pet\r",
 									"pm.test(\"There are two photo URL\", function () {\r",
 									"    pm.expect(jsonData.photoUrls.length).to.eql(2);\r",
 									"});\r",
 									"\r",
+									"//Check how many tags has new pet\r",
 									"pm.test(\"There are two tags\", function () {\r",
 									"    pm.expect(jsonData.tags.length).to.eql(2);\r",
 									"});\r",
 									"\r",
+									"//Check new pet status\r",
 									"pm.test(\"Status is available\", function () {\r",
 									"    pm.expect(jsonData.status).to.eql(\"available\");\r",
 									"});"
@@ -190,7 +228,8 @@
 								"pet",
 								"{{petId}}"
 							]
-						}
+						},
+						"description": "Scenario: Get new pet by id\n\nGIVEN a new pet posted on the shop\n\nWHEN I find the new pet by Id\n\nTHEN I will obtain all the information of the new pet"
 					},
 					"response": []
 				},
@@ -201,18 +240,32 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/*\r",
+									"Scenario: Update a pet status to sold\r",
+									"\r",
+									"GIVEN a pet that has been sold\r",
+									"\r",
+									"WHEN I send the Id and the status as sold\r",
+									"\r",
+									"THEN I will obtain the object of the pet with status sold\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
 									"var jsonData = pm.response.json();\r",
 									"var petId = pm.environment.get(\"petId\");\r",
 									"\r",
 									"//Tests\r",
+									"//Check status code is OK\r",
 									"pm.test(\"Status code is OK\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body contains Id\", function () {\r",
+									"//Check response contains the expected Id\r",
+									"pm.test(\"Body contains expected Id\", function () {\r",
 									"    pm.expect(jsonData.id).to.eql(petId);\r",
 									"});\r",
 									"\r",
+									"//Check pet status is sold\r",
 									"pm.test(\"Status is sold\", function () {\r",
 									"    pm.expect(jsonData.status).to.eql(\"sold\");\r",
 									"});"
@@ -242,30 +295,99 @@
 								"pet"
 							]
 						},
-						"description": "StartFragment\n\nScenario: Update a pet status to sol\n\nGIVEN a pet that is not available anymore\n\nWHEN I select status as sold\n\nTHEN I will obtain the object of the pet with status sold"
+						"description": "Scenario: Update a pet status to sold\n\nGIVEN a pet that has been sold\n\nWHEN I send the Id and the status as sold\n\nTHEN I will obtain the object of the pet with status sold"
 					},
 					"response": []
 				},
 				{
-					"name": "1.5 DeletePet",
+					"name": "1.5 GetUpdatedPetById",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/*\r",
+									"Scenario: Get updated by id\r",
+									"\r",
+									"GIVEN a pet has been updated as sold\r",
+									"\r",
+									"WHEN I find the updated pet by Id\r",
+									"\r",
+									"THEN I will obtain all the id and the status of the updated pet\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
 									"var jsonData = pm.response.json();\r",
 									"var petId = pm.environment.get(\"petId\");\r",
 									"\r",
 									"//Tests\r",
+									"//Check status is OK\r",
 									"pm.test(\"Status code is 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Status is sold\", function () {\r",
-									"    pm.expect(jsonData.message).to.eql(String(petId));\r",
+									"//Check body id equals expected id\r",
+									"pm.test(\"Body contains expected id\", function () {\r",
+									"    pm.expect(jsonData.id).to.eql(petId);\r",
 									"});\r",
 									"\r",
-									"pm.environment.set(\"notFoundPetId\", jsonData.message);"
+									"//Check status has changed to sold\r",
+									"pm.test(\"Status is sold\", function () {\r",
+									"    pm.expect(jsonData.status).to.eql(\"sold\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}v2/pet/{{petId}}",
+							"host": [
+								"{{url}}v2"
+							],
+							"path": [
+								"pet",
+								"{{petId}}"
+							]
+						},
+						"description": "Scenario: Get updated by id\n\nGIVEN a pet has been updated as sold\n\nWHEN I find the updated pet by Id\n\nTHEN I will obtain all the id and the status of the updated pet"
+					},
+					"response": []
+				},
+				{
+					"name": "1.6 DeletePet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"/*\r",
+									"Scenario: Delete a pet\r",
+									"\r",
+									"GIVEN I want a pet to not be in the inventory anymore\r",
+									"\r",
+									"WHEN I delete the registry\r",
+									"\r",
+									"THEN the pet will disappear from the inventory of the pet store.\r",
+									"*/\r",
+									"\r",
+									"//Set variables\r",
+									"var jsonData = pm.response.json();\r",
+									"var petId = pm.environment.get(\"petId\");\r",
+									"\r",
+									"//Tests\r",
+									"//Status code is OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//Checked deleted pet id equals expected id\r",
+									"pm.test(\"Status is sold\", function () {\r",
+									"    pm.expect(jsonData.message).to.eql(String(petId));\r",
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -295,19 +417,29 @@
 								"{{petId}}"
 							]
 						},
-						"description": "StartFragment\n\nScenario: Obtain all available pets\n\nGIVEN I want a pet to not be in the inventory anymore\n\nWHEN I delete the registry\n\nTHEN the pet will disappear from the inventory of the pet store.\n\nEndFragment"
+						"description": "Scenario: Delete a pet\n\nGIVEN I want a pet to not be in the inventory anymore\n\nWHEN I delete the registry\n\nTHEN the pet will disappear from the inventory of the pet store."
 					},
 					"response": []
 				},
 				{
-					"name": "1.6 DeletePet_NotFound",
+					"name": "1.7 DeletePet_NotFound",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"/* \r",
+									"Scenario: Delete a non-existent pet\r",
+									"\r",
+									"GIVEN A pet that is no longer in store\r",
+									"\r",
+									"WHEN I request to delete the id\r",
+									"\r",
+									"THEN I get a response status 404 Not Found.\r",
+									"*/\r",
 									"\r",
 									"//Tests\r",
+									"//Status code is Not Found\r",
 									"pm.test(\"Status code is 404\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
 									"});"
@@ -340,11 +472,12 @@
 								"{{petId}}"
 							]
 						},
-						"description": "StartFragment\n\nScenario: Obtain all available pets\n\nGIVEN I want a pet to not be in the inventory anymore\n\nWHEN I delete the registry\n\nTHEN the pet will disappear from the inventory of the pet store.\n\nEndFragment"
+						"description": "Scenario: Delete a non-existent pet\n\nGIVEN A pet that is no longer in store\n\nWHEN I request to delete the id\n\nTHEN I get a response status 404 Not Found."
 					},
 					"response": []
 				}
 			],
+			"description": "#### **1.1 GetAvailablePets**\n\nScenario: Obtain all available pets\n\nGIVEN I have a list with all the pets and their status (available, pending or sold)\n\nWHEN I select status as available\n\nTHEN I will obtain the list with all the pets available at the moment\n\n#### **1.2 PostNewPet**\n\nScenario: Post a new pet\n\nGIVEN I have the description of a new pet available in the store)\n\nWHEN I post the new pet\n\nTHEN I will obtain the object of the new pet\n\n#### 1.3 GetNewPetById\n\nStartFragment\n\nScenario: Get new pet by id\n\nGIVEN a new pet posted on the shop\n\nWHEN I find the new pet by Id\n\nTHEN I will obtain all the information of the new pet\n\nEndFragment\n\n1.4 UpdatePet\n\n1.5 GetUpdatedPetById\n\n1.6 DeletePet\n\n1.7 DeletePet_NotFound",
 			"event": [
 				{
 					"listen": "prerequest",
