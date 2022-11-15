@@ -3,7 +3,7 @@
 
 ## Description
 
-This is an exercise to test the API PetStore ([Swagger UI] ( https://petstore.swagger.io/#/ "Pet Store")). Test case description can be found in the collection documentation.
+This is an exercise to test the API PetStore in Swagger ( <https://petstore.swagger.io/#> ). Test case description can be found in the collection documentation.
 
 ## How To
 
@@ -39,3 +39,4 @@ In order to be able to execute the tests in Postman or Newman, do the following 
 - We could validate updating inexistent pet properties for requests 1.2 and 1.4.
 - As the collection grows and we use the same variables or methods for multiple requests, we can store these elements in the test scenario folder so we avoid unnecessary repetition.
 - We could also create an external JSON file in order to use different data sets for the tests.
+- We could move the tests to Rest Assured, as it is a more complete framework for coding.
